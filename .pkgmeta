@@ -1,0 +1,19 @@
+---
+package-as: LibForecast
+enable-nolib-creation: no
+
+externals:
+  Libs/CallbackHandler-1.0: https://repos.curseforge.com/wow/callbackhandler/trunk/CallbackHandler-1.0
+  Libs/LibStub: https://repos.curseforge.com/wow/libstub/trunk
+
+ignore:
+  - Libs/*/*.rockspec
+  - Libs/*/*.toc
+  - Libs/*/changelog.*
+  - Libs/*/CHANGELOG.*
+  - Libs/*/docs
+  - Libs/*/examples
+  - Libs/*/README.*
+  - Libs/*/tests
+  - README.md
+  - Makefile
