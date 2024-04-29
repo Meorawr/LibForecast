@@ -5,6 +5,14 @@ if not LibForecast then
     return;
 end
 
+LibForecast.WeatherType = {
+    Clear = 1,
+    Rain = 2,
+    Snow = 3,
+    Sandstorm = 4,
+    Miscellaneous = 5,
+};
+
 if not LibForecast.callbacks then
     LibForecast.callbacks = CallbackHandler:New(LibForecast);
 end
