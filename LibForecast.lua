@@ -29,6 +29,7 @@ end
 
 local DefaultWeatherInfo = {
     type = LibForecast.WeatherType.Unknown,
+    intensity = 0,
 };
 
 ---@param weatherType integer
