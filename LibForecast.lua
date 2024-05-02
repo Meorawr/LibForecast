@@ -155,13 +155,14 @@ LibForecast:OnLoad();
 ---@class (exact) LibForecast1.WeatherInfo
 ---@field type LibForecast1.WeatherType
 ---@field intensity number
+---@field recordID integer?
 
 if (...) == "LibForecast" then
     local function OnSlashCommand()
         DevTools_Dump({ weatherInfo = LibForecast:GetCurrentWeatherInfo() });
     end
 
-    local function OnWeatherChanged(_, weatherInfo)
+    local function OnWeatherChanged(_, _, weatherInfo)
         DevTools_Dump({ event = "CHANGE", weatherInfo = weatherInfo });
     end
 
