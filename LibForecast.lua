@@ -153,7 +153,7 @@ LibForecast:OnLoad();
 
 ---@class (exact) LibForecast1.WeatherInfo
 ---@field type LibForecast1.WeatherType
----@field intensity number?
+---@field intensity number
 
 if (...) == "LibForecast" then
     local function OnSlashCommand()
