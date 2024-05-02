@@ -5,7 +5,7 @@ local CallbackHandler = LibStub:GetLibrary("CallbackHandler-1.0");
 ---@field private frame Frame
 ---@field private callbacks CallbackHandlerRegistry
 ---@field private weatherInfo LibForecast1.WeatherInfo
-local LibForecast = LibStub:NewLibrary("LibForecast-1.0", 2);
+local LibForecast = LibStub:NewLibrary("LibForecast-1.0", 3);
 
 if not LibForecast then
     return;
@@ -33,12 +33,13 @@ local DefaultWeatherInfo = {
 };
 
 ---@param weatherType integer
----@param weatherIntensity number?
+---@param intensity number
 ---@return LibForecast1.WeatherInfo
-local function CreateWeatherInfo(weatherType, weatherIntensity)
+local function CreateWeatherInfo(weatherType, intensity, recordID)
     return {
         type = weatherType,
-        intensity = weatherIntensity,
+        intensity = intensity,
+        recordID = recordID,
     }
 end
 
@@ -64,14 +65,27 @@ end
 
 ---@return LibForecast1.WeatherInfo
 local function ParseWeatherChangedMessage(message)
+    -- Console messages are always English strings, so no localization
+    -- concerns. We do however have an itty bitty problem in that there's
+    -- two messages with varying levels of information.
+
+    local weatherType, intensity, recordID;
     local weatherInfo;
-    local weatherType, weatherIntensity = string.match(message, "Weather changed to (%d+), intensity ([%d.]+)");
 
-    weatherType = tonumber(weatherType);
-    weatherIntensity = tonumber(weatherIntensity);
+    if string.find(message, "Weather changed to") == 1 then
+        weatherType = tonumber(string.match(message, "changed to (%d+)"));
+        intensity = tonumber(string.match(message, "intensity ([%d.]+)"));
+        recordID = tonumber(string.match(message, "recID (%d+)"));
 
-    if weatherType then
-        weatherInfo = CreateWeatherInfo(weatherType, weatherIntensity);
+        if not weatherType then
+            weatherType = LibForecast.WeatherType.Unknown;
+        end
+
+        if not intensity then
+            intensity = 0;
+        end
+
+        weatherInfo = CreateWeatherInfo(weatherType, intensity, recordID);
     end
 
     return weatherInfo;
@@ -129,22 +143,26 @@ end
 ---@private
 function LibForecast:LoadVolatileState()
     local serialized = C_CVar.GetCVar("LibForecast1_VolatileState") or "";
-    local weatherType, weatherIntensity = string.split(":", serialized);
+    local weatherType, intensity, recordID = string.split(":", serialized);
 
     weatherType = tonumber(weatherType);
-    weatherIntensity = tonumber(weatherIntensity);
+    intensity = tonumber(intensity);
+    recordID = tonumber(recordID);
 
     if weatherType then
-        local weatherInfo = CreateWeatherInfo(weatherType, weatherIntensity);
+        local weatherInfo = CreateWeatherInfo(weatherType, intensity, recordID);
         self:SetCurrentWeatherInfo(weatherInfo);
     end
 end
 
 ---@private
 function LibForecast:SaveVolatileState()
-    local weatherType = tostring(self.weatherInfo.type);
-    local weatherIntensity = tostring(self.weatherInfo.intensity);
-    local serialized = string.join(":", weatherType, weatherIntensity);
+    local weatherInfo = self.weatherInfo;
+    local weatherType = tostring(weatherInfo.type);
+    local intensity = tostring(weatherInfo.intensity);
+    local recordID = tostring(weatherInfo.recordID or "");
+
+    local serialized = string.join(":", weatherType, intensity, recordID);
 
     C_CVar.RegisterCVar("LibForecast1_VolatileState", "");
     C_CVar.SetCVar("LibForecast1_VolatileState", serialized);
