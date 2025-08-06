@@ -5,7 +5,7 @@ local CallbackHandler = LibStub:GetLibrary("CallbackHandler-1.0");
 ---@field private frame Frame
 ---@field private callbacks CallbackHandlerRegistry
 ---@field private weatherInfo LibForecast1.WeatherInfo
-local LibForecast = LibStub:NewLibrary("LibForecast-1.0", 3);
+local LibForecast = LibStub:NewLibrary("LibForecast-1.0", 4);
 
 if not LibForecast then
     return;
@@ -13,11 +13,11 @@ end
 
 ---@class LibForecast1.WeatherType
 LibForecast.WeatherType = {
-    Clear = 1,
-    Rain = 2,
-    Snow = 3,
-    Sandstorm = 4,
-    Miscellaneous = 5,
+    Clear = 0,
+    Rain = 1,
+    Snow = 2,
+    Sandstorm = 3,
+    Miscellaneous = 4,
     Unknown = -1,
 };
 
