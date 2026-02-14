@@ -1,4 +1,4 @@
-## Interface: 110200, 50500, 11507
+## Interface: 120001
 ## Title: LibForecast
 ## Notes: Provides an event whenever the weather changes.
 ## Author: Daniel "Meorawr" Yates <me@meorawr.io>
